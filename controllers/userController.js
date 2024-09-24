@@ -162,7 +162,7 @@ const UserController = {
         },
       })
 
-      if(!user) {
+      if (!user) {
         return res.status(400).json({ error: 'Пользователь не найден' })
       }
 
