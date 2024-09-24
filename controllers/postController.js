@@ -25,7 +25,6 @@ const PostController = {
     }
   },
   getAllPosts: async (req, res) => {
-
     const userId = req.user.userId
 
     try {
@@ -33,29 +32,60 @@ const PostController = {
         include: {
           likes: true,
           auhtor: true,
-          comments: true
+          comments: true,
         },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: 'desc',
+        },
       })
 
-      const postWithLikeInfo = posts.map(post => ({
+      const postWithLikeInfo = posts.map((post) => ({
         ...post,
-        likeByUser: post.likes.some(like => like.userId === userId)
+        likeByUser: post.likes.some((like) => like.userId === userId),
       }))
 
       res.json(postWithLikeInfo)
-    } catch(e) {
+    } catch (e) {
       console.error('Error in get all post', e)
       res.status(500).json({ error: 'internal server error' })
     }
   },
   getpostById: async (req, res) => {
-    res.send('get post by id')
+    const { id } = req.params
+    const userId = req.user.userId
+
+    try {
+      const post = await prisma.post.findUnique({
+        where: { id },
+        include: {
+          comments: {
+            include: {
+              user: true,
+            }
+          },
+          likes: true,
+          auhtor: true,
+        },
+      })
+
+      if (!post) {
+        return res.status(404).json({ error: 'Пост не найден' })
+      }
+
+      const postWithLikeInfo = {
+        ...post,
+        likeByUser: post.likes.some((like) => like.userId === userId),
+      }
+
+      res.json(postWithLikeInfo)
+    } catch (e) {
+      console.error('Error in get post by id', e)
+      res.status(500).json({ error: 'internal server error' })
+    }
   },
   deletePost: async (req, res) => {
-    res.send('delete post')
+    const { id } = req.params
+    const userId = req.user.userId
   },
 }
 
