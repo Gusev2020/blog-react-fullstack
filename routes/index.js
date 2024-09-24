@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
-const { UserController, PostController } = require('../controllers')
+const { UserController, PostController, CommnetController } = require('../controllers')
 const authenticateToken = require('../middleware/auth')
 
 // Где будем хранить файлы
@@ -28,5 +28,9 @@ router.post('/posts', authenticateToken, PostController.createPost)
 router.get('/posts', authenticateToken, PostController.getAllPosts)
 router.get('/posts/:id', authenticateToken, PostController.getpostById)
 router.delete('/posts/:id', authenticateToken, PostController.deletePost)
+
+// comments routes
+router.post('/comments', authenticateToken, CommnetController.createComment)
+router.delete('/comments/:id', authenticateToken, CommnetController.deleteComment)
 
 module.exports = router
