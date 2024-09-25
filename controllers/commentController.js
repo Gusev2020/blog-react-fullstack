@@ -31,15 +31,15 @@ const CommnetController = {
       const comment = await prisma.comment.findUnique({
         where: { id },
       })
-  
+
       if (!comment) {
         return res.status(404).json({ error: 'Комментарий не найден' })
       }
-  
+
       if (comment.userId !== userId) {
         return res.status(403).json({ error: 'Нет доступа' })
       }
-      
+
       const deletePost = await prisma.comment.delete({ where: { id } })
       res.json(deletePost)
     } catch (e) {
