@@ -25,7 +25,7 @@ const UserController = {
 
       const png = jDantIcon.toPng(name, 200)
       const avatarName = `${name}_${Date.now()}.png`
-      const avatarPath = path.join(__dirname, '../uploads', avatarName)
+      const avatarPath = path.join(__dirname, '/../uploads', avatarName)
       fs.writeFileSync(avatarPath, png)
 
       const user = await prisma.user.create({
@@ -33,7 +33,7 @@ const UserController = {
           email,
           password: hashPassword,
           name,
-          avatar: `/uploads/${avatarPath}`,
+          avatar: `/uploads/${avatarName}`,
         },
       })
 
